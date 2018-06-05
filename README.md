@@ -56,6 +56,8 @@ alt="The video of the trajectory" height="180" border="3" /></a>
 
 ## Calling convention:
 
-./visualize_Trajectory_KITTI [dir_name of the dataset]
+> cd build && cmake .. && make
 
-./visualize_Trajectory_KITTI ../dataset/
+> ./visualize_Trajectory_KITTI [dir_name of the dataset]
+
+> ./visualize_Trajectory_KITTI ../dataset/
