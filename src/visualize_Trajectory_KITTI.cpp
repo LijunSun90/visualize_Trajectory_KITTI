@@ -10,6 +10,11 @@
 using namespace std;
 
 void help(char* argv[]){
+    cout << "\nCalling convention: \n" 
+    << "\n    ./visualize_Trajectory_KITTI [dir_name of the dataset]\n" 
+    << "\n For example, \n"
+    << "\n    ./visualize_Trajectory_KITTI ../dataset/\n\n"
+    << endl;
 }
 
 void visualize_trajectory(string poses_file){
@@ -19,7 +24,7 @@ void visualize_trajectory(string poses_file){
     // Load the file.
     ifstream loaded_poses(poses_file.c_str());
     if(!loaded_poses.is_open()){
-        cout << "ERROR: cannot open the file " + poses_file << endl;
+        cout << "\nERROR: cannot open the file " + poses_file << endl;
         exit(-1);
     }
     //
@@ -36,29 +41,29 @@ void visualize_trajectory(string poses_file){
         cv::Mat R_truth = cv::Mat::zeros(3, 3, CV_64F);
         cv::Mat t_truth = cv::Mat::zeros(3, 1, CV_64F);
 
-        // R_truth.
+        // R_truth and t_truth.
         //
         for(int row = 0; row < 3; row++){
-            for(int col = 0; col < 3; col++){
+            for(int col = 0; col < 4; col++){
                 linestream >> entry;
                 // cout << entry << endl;
-                R_truth.at<double>(row, col) = atof(entry.c_str());
+                if(col == 3){
+                    t_truth.at<double>(row) = atof(entry.c_str());
+                } else {
+                    R_truth.at<double>(row, col) = atof(entry.c_str());
+                }
             }
         } 
         Rs_truth.push_back(R_truth);
-        // t_truth.
-        //
-        for(int row = 0; row < 3; row++){
-            linestream >> entry;
-            t_truth.at<double>(row) = atof(entry.c_str());
-        }
         ts_truth.push_back(t_truth);
-        cout << t_truth << endl;
+        cout << "\nR_truth: \n" << R_truth << endl;
+        cout << "t_truth: \n" << t_truth << endl;
         
-        pose_current = cv::Point(t_truth.at<double>(0) * 1000 + 300, t_truth.at<double>(2));
+        pose_current = cv::Point(t_truth.at<double>(0) + 300, t_truth.at<double>(2) + 100);
         cv::circle(trajectory, pose_current, 1, cv::Scalar(255, 0, 0), 1, CV_FILLED);
         cv::imshow("trajectory", trajectory);
-        if(cv::waitKey(10) == 27) exit(0);
+        cv::moveWindow("trajectory", 0, 0);
+        if(cv::waitKey(5) == 27) exit(0);
 
 
     } // while(getline(loaded_poses, lines)).
