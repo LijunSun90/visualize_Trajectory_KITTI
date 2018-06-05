@@ -51,7 +51,8 @@ So, Row i represents the i'th pose of the left camera coordinate system with res
 
 Here, the trajectory is shown in the planar of x and z, with x pointing to the right, and z pointing downwards.
 
-[![The video of the trajectory](https://github.com/LijunSun90/visualize_Trajectory_KITTI/blob/master/doc/trajectory_ground_truth_KITTI.mp4)](https://github.com/LijunSun90/visualize_Trajectory_KITTI/blob/master/doc/trajectory_ground_truth_KITTI.mp4)
+<a href="https://github.com/LijunSun90/visualize_Trajectory_KITTI/blob/master/doc/trajectory_ground_truth_KITTI.mp4" target="_blank"><img src="https://github.com/LijunSun90/visualize_Trajectory_KITTI/blob/master/doc/trajectory_ground_truth_KITTI.png" 
+alt="The video of the trajectory" height="180" border="3" /></a>
 
 ## Calling convention:
 
