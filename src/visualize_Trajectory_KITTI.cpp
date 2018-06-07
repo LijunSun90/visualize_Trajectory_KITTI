@@ -17,10 +17,12 @@ void help(char* argv[]){
     << endl;
 }
 
-void visualize_trajectory(string poses_file){
-   // Ground truth poses.
-    //
-    vector< cv::Mat > Rs_truth, ts_truth;
+
+void parsePosesFile(
+    string poses_file,
+    vector< cv::Mat > & Rs,
+    vector< cv::Mat > & ts){
+
     // Load the file.
     ifstream loaded_poses(poses_file.c_str());
     if(!loaded_poses.is_open()){
@@ -30,44 +32,62 @@ void visualize_trajectory(string poses_file){
     //
     string lines, entry;
     istringstream linestream;
-    // trajectory: Horizontal: x; Vertical: z.
-    cv::Mat trajectory = cv::Mat::zeros(600, 600, CV_8UC3);    
-    cv::Point pose_current;
     //
     while(getline(loaded_poses, lines)){
         linestream.clear();
         linestream.str(lines);
 
-        cv::Mat R_truth = cv::Mat::zeros(3, 3, CV_64F);
-        cv::Mat t_truth = cv::Mat::zeros(3, 1, CV_64F);
+        cv::Mat R = cv::Mat::zeros(3, 3, CV_64F);
+        cv::Mat t = cv::Mat::zeros(3, 1, CV_64F);
 
-        // R_truth and t_truth.
+        // R and t.
         //
         for(int row = 0; row < 3; row++){
             for(int col = 0; col < 4; col++){
                 linestream >> entry;
                 // cout << entry << endl;
                 if(col == 3){
-                    t_truth.at<double>(row) = atof(entry.c_str());
+                    t.at<double>(row) = atof(entry.c_str());
                 } else {
-                    R_truth.at<double>(row, col) = atof(entry.c_str());
+                    R.at<double>(row, col) = atof(entry.c_str());
                 }
             }
         } 
-        Rs_truth.push_back(R_truth);
-        ts_truth.push_back(t_truth);
-        cout << "\nR_truth: \n" << R_truth << endl;
-        cout << "t_truth: \n" << t_truth << endl;
-        
-        pose_current = cv::Point(t_truth.at<double>(0) + 300, t_truth.at<double>(2) + 100);
+        Rs.push_back(R);
+        ts.push_back(t);
+        cout << "\nR: \n" << R 
+        << "\nt: \n" << t << endl;
+
+
+    } // while(getline(loaded_poses, lines)).
+    
+
+} // END OF parsePosesFile().
+
+
+/**
+ * @param Rs, the collection of the total rotation matrix to the reference.
+ * @param ts, the collection of the total translation matrix to the reference.
+ */
+void visualize_trajectory(vector< cv::Mat > Rs, vector< cv::Mat > ts){
+   
+    // trajectory: Horizontal: x; Vertical: z.
+    cv::Mat trajectory = cv::Mat::zeros(600, 600, CV_8UC3);    
+    cv::Point pose_current;
+    //
+    cv::Mat R, t;
+    for(size_t ix = 0; ix < Rs.size(); ix++){
+        R = Rs[ix];
+        t = ts[ix];
+
+        pose_current = cv::Point(t.at<double>(0) + 300, t.at<double>(2) + 100);
         cv::circle(trajectory, pose_current, 1, cv::Scalar(255, 0, 0), 1, CV_FILLED);
         cv::imshow("trajectory", trajectory);
         cv::moveWindow("trajectory", 0, 0);
         if(cv::waitKey(5) == 27) exit(0);
+    } // END OF for(size_t ix = 0; ix < Rs.size(); ix++).
 
-
-    } // while(getline(loaded_poses, lines)).
-}
+} // END OF visualize_trajectory().
 
 
 int main(int argc, char* argv[]){
@@ -80,8 +100,15 @@ int main(int argc, char* argv[]){
 
     string dir_name = argv[1];
 
+    // Parse the poses file.
+    //
     string poses_file = dir_name + "/poses/00.txt";
-    visualize_trajectory(poses_file);
+    vector< cv::Mat > Rs, ts;
+    parsePosesFile(poses_file, Rs, ts);
+
+    // Visualize the trajectory.
+    //
+    visualize_trajectory(Rs, ts);
 
     cv::destroyAllWindows();
     return 0;
