@@ -69,7 +69,7 @@ void parsePosesFile(
  * @param Rs, the collection of the total rotation matrix to the reference.
  * @param ts, the collection of the total translation matrix to the reference.
  */
-void visualize_trajectory(vector< cv::Mat > Rs, vector< cv::Mat > ts){
+void visualizeTrajectory(vector< cv::Mat > Rs, vector< cv::Mat > ts){
    
     // trajectory: Horizontal: x; Vertical: z.
     cv::Mat trajectory = cv::Mat::zeros(600, 600, CV_8UC3);    
@@ -87,7 +87,7 @@ void visualize_trajectory(vector< cv::Mat > Rs, vector< cv::Mat > ts){
         if(cv::waitKey(5) == 27) exit(0);
     } // END OF for(size_t ix = 0; ix < Rs.size(); ix++).
 
-} // END OF visualize_trajectory().
+} // END OF visualizeTrajectory().
 
 
 int main(int argc, char* argv[]){
@@ -108,7 +108,7 @@ int main(int argc, char* argv[]){
 
     // Visualize the trajectory.
     //
-    visualize_trajectory(Rs, ts);
+    visualizeTrajectory(Rs, ts);
 
     cv::destroyAllWindows();
     return 0;
