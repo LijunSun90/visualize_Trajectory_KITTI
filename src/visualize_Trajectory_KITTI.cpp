@@ -55,8 +55,8 @@ void parsePosesFile(
         } 
         Rs.push_back(R);
         ts.push_back(t);
-        cout << "\nR: \n" << R 
-        << "\nt: \n" << t << endl;
+        // cout << "\nR: \n" << R 
+        // << "\nt: \n" << t << endl;
 
 
     } // while(getline(loaded_poses, lines)).
@@ -79,12 +79,17 @@ void visualizeTrajectory(vector< cv::Mat > Rs, vector< cv::Mat > ts){
     for(size_t ix = 0; ix < Rs.size(); ix++){
         R = Rs[ix];
         t = ts[ix];
+        cout << "\nt: \n" << t << endl;
 
         pose_current = cv::Point(t.at<double>(0) + 300, t.at<double>(2) + 100);
         cv::circle(trajectory, pose_current, 1, cv::Scalar(255, 0, 0), 1, CV_FILLED);
         cv::imshow("trajectory", trajectory);
         cv::moveWindow("trajectory", 0, 0);
-        if(cv::waitKey(5) == 27) exit(0);
+        if(cv::waitKey(2) == 27){
+            cv::imwrite("trajectory.jpg", trajectory);
+            exit(0);
+        }
+        cv::imwrite("trajectory.jpg", trajectory);
     } // END OF for(size_t ix = 0; ix < Rs.size(); ix++).
 
 } // END OF visualizeTrajectory().
