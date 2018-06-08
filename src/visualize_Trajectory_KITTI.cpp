@@ -81,13 +81,18 @@ void visualizeTrajectory(vector< cv::Mat > Rs, vector< cv::Mat > ts){
         t = ts[ix];
         cout << "\nt: \n" << t << endl;
 
-        pose_current = cv::Point(t.at<double>(0) + 300, t.at<double>(2) + 100);
+        pose_current = cv::Point(-t.at<double>(0) + 300, t.at<double>(2) + 100);
         cv::circle(trajectory, pose_current, 1, cv::Scalar(255, 0, 0), 1, CV_FILLED);
-        cv::imshow("trajectory", trajectory);
-        cv::moveWindow("trajectory", 0, 0);
-        if(cv::waitKey(2) == 27){
+        cv::imshow("Trajectory. 'Space', pause or continue; 'Esc', exit.", trajectory);
+        cv::moveWindow("Trajectory. 'Space', pause or continue; 'Esc', exit.", 0, 0);
+        int key = cv::waitKey(2);
+        if(key == 27){
             cv::imwrite("trajectory.jpg", trajectory);
             exit(0);
+        } else if(key == ' '){
+            if (cv::waitKey(0) == ' '){
+                continue;
+            }
         }
         cv::imwrite("trajectory.jpg", trajectory);
     } // END OF for(size_t ix = 0; ix < Rs.size(); ix++).
